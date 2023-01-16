@@ -1,10 +1,11 @@
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform } from 'react-native';
-import BackgroundTask from 'react-native-background-task'
+import { Text, View, Button, Platform, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import {bdfirestore} from './conexoes/configuracoes';
 import { doc, onSnapshot, collection, query } from 'firebase/firestore';
+import logopreto from './assets/logopreto.png';
+import Bloco from './components/bloco';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -14,11 +15,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-BackgroundTask.define(() => {
-  schedulePushNotification()
-  console.log('Hello from a background task')
-  BackgroundTask.finish()
-})
 
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -35,15 +31,16 @@ export default function App() {
         onSnapshot(values, (snapshot) => setTodosDocs(
             snapshot.docs.map(doc => ({
                 _id: doc.data()._id,
+                id: doc.data().id,
                 key: doc.data().key,
                 data: doc.data().Data,
                 nome: doc.data().Nome,
                 whatsapp: doc.data().Whatsapp,
                 mensagem: doc.data().Mensagem,
-            })), schedulePushNotification(), 
+            })), //schedulePushNotification(), 
             
         ));
-        console.log(doc.data);
+        //console.log(doc.data);
     }
     getMessages();
 }, []);
@@ -63,22 +60,44 @@ export default function App() {
 
   return (
     <View
-      style={{flex: 1,}}>
-        <Text>nome: {contato.Nome}</Text>
+      style={{flex: 1, marginTop: 25, backgroundColor: '#000000', color: '#333333'}}>
+        <Image source={logopreto} style={styles.logo}></Image>
         {todosDocs.map((doc, i)=>{
             return(
                 <View key={i++}>
-                    <Text>Data: {doc.data}</Text>
-                    <Text>Nome: {doc.nome}</Text>
-                    <Text>Whatsapp: {doc.whatsapp}</Text>
-                    <Text>Mensagem: {doc.mensagem}</Text>
-                  </View>
+                  <Bloco whatsapp={doc.whatsapp} nome={doc.nome} mensagem={doc.mensagem} id={doc.id} />
+                </View>
             )}
             )}
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  balao: {
+    margin: 10,
+    borderWidth: 3,
+    borderColor: '#ff8c00',
+    width: 300,
+    float: 'left',
+    padding: 15,
+  },
+  texto: {
+    color: '#999999',
+  },
+  logo: {
+    width: 310,
+    height: 49,
+    margin:15,
+  },
+  setaOn: {
+    width: 12,
+    height: 7,
+    marginTop:-11,
+    marginLeft: 280,
+    marginBottom: 10,
+  },
+});
 async function schedulePushNotification() {
   await Notifications.scheduleNotificationAsync({
     content: {
