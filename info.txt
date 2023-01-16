@@ -2,4 +2,4 @@ expo install expo-notifications
 
 expocredentials:manager e cria uma nova credencial lá no expo
 
-yarn add @react-native-firebase/messaging
+Rodar eas build -p android --non-interactive --profile preview para gerar o Buils APK

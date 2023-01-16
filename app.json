@@ -2,7 +2,7 @@
   "expo": {
     "name": "notifications",
     "slug": "notifications",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -25,7 +25,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.danielwalterrodrigues.notifications"
+      
+      "package": "com.danielwalterrodrigues.notifications",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

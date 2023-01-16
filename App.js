@@ -2,8 +2,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
-
-
+import BackgroundTask from 'react-native-background-task'
 import {bdfirestore} from './conexoes/configuracoes';
 import { doc, onSnapshot, collection, query } from 'firebase/firestore';
 
@@ -15,21 +14,28 @@ Notifications.setNotificationHandler({
   }),
 });
 
+BackgroundTask.define(() => {
+  console.log('Hello from a background task')
+  BackgroundTask.finish()
+})
+
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
   const [contato, setContato] = useState('');
-  const [todosDocs, setTodosDocs] = useState([]); 
+  const [todosDocs, setTodosDocs] = useState([]);   
 
   useEffect(() => {
+
     async function getMessages() {
         const values = query(collection(bdfirestore, 'Contatos'));
         onSnapshot(values, (snapshot) => setTodosDocs(
             snapshot.docs.map(doc => ({
                 _id: doc.data()._id,
-                key: doc.data().Data,
+                key: doc.data().key,
+                data: doc.data().Data,
                 nome: doc.data().Nome,
                 whatsapp: doc.data().Whatsapp,
                 mensagem: doc.data().Mensagem,
@@ -58,15 +64,14 @@ export default function App() {
     <View
       style={{flex: 1,}}>
         <Text>nome: {contato.Nome}</Text>
-        {todosDocs.map((doc)=>{
+        {todosDocs.map((doc, i)=>{
             return(
-                <><View key={doc.Data}>
-                    <Text>Data: {doc.key}</Text>
+                <View key={i++}>
+                    <Text>Data: {doc.data}</Text>
                     <Text>Nome: {doc.nome}</Text>
                     <Text>Whatsapp: {doc.whatsapp}</Text>
                     <Text>Mensagem: {doc.mensagem}</Text>
                   </View>
-                </>
             )}
             )}
       <Button
