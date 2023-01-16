@@ -15,6 +15,7 @@ Notifications.setNotificationHandler({
 });
 
 BackgroundTask.define(() => {
+  schedulePushNotification()
   console.log('Hello from a background task')
   BackgroundTask.finish()
 })
@@ -74,12 +75,6 @@ export default function App() {
                   </View>
             )}
             )}
-      <Button
-        title="Testar Notificação"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      />
     </View>
   );
 }
