@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
 
 
-import { firestore } from './connection/config'
+import {bdfirestore} from './conexoes/configuracoes';
 import { doc, onSnapshot, collection, query } from 'firebase/firestore';
 
 Notifications.setNotificationHandler({
@@ -25,7 +25,7 @@ export default function App() {
 
   useEffect(() => {
     async function getMessages() {
-        const values = query(collection(firestore, 'Contatos'));
+        const values = query(collection(bdfirestore, 'Contatos'));
         onSnapshot(values, (snapshot) => setTodosDocs(
             snapshot.docs.map(doc => ({
                 _id: doc.data()._id,
@@ -60,12 +60,12 @@ export default function App() {
         <Text>nome: {contato.Nome}</Text>
         {todosDocs.map((doc)=>{
             return(
-                <>
+                <><View key={doc.Data}>
                     <Text>Data: {doc.key}</Text>
                     <Text>Nome: {doc.nome}</Text>
                     <Text>Whatsapp: {doc.whatsapp}</Text>
                     <Text>Mensagem: {doc.mensagem}</Text>
-
+                  </View>
                 </>
             )}
             )}
